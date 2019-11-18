@@ -1,4 +1,5 @@
 #!/bin/bash
+set -m
 
 OSK="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
 VMDIR=$PWD
@@ -63,7 +64,7 @@ qemu-system-x86_64 \
     -drive id=SystemDisk,if=none,file="/macOS.img" \
     -device ide-hd,bus=sata.4,drive=SystemDisk \
     -monitor telnet::45454,server,nowait \
-    -daemonize -vnc 0.0.0.0:0 -k $KEYBOARD
+    -nographic -vnc 0.0.0.0:0 -k $KEYBOARD &
 
 while ! nc -z 127.0.0.1 45454 ; do sleep 1 ; done
 
@@ -75,5 +76,6 @@ while [ $SECONDS -lt $end ] && nc -z 127.0.0.1 45454 && ! sshpass -p 'macos' ssh
     sleep 2;
 done
 
-echo done and ready
-nc 127.0.0.1 45454
+echo done and ready, wait for VM;
+fg;
+echo exiting;
