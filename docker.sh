@@ -68,9 +68,11 @@ qemu-system-x86_64 \
 while ! nc -z 127.0.0.1 45454 ; do sleep 1 ; done
 
 echo sending ret
-while nc -z 127.0.0.1 45454 && !  sshpass -p 'macos' ssh -q -o "StrictHostKeyChecking no" -o "PreferredAuthentications=publickey" -o ConnectTimeout=1 macos@127.0.0.1 -p 22 exit; do
+end=$((SECONDS+30))
+
+while [ $SECONDS -lt $end ] && nc -z 127.0.0.1 45454 && ! sshpass -p 'macos' ssh -q -o "StrictHostKeyChecking no" -o ConnectTimeout=1 macos@localhost -p 22 exit; do
     (echo "sendkey ret") | nc 127.0.0.1 45454 &> /dev/null;
-    sleep 3;
+    sleep 2;
 done
 
 echo done and ready
