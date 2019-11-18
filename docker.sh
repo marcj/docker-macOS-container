@@ -63,13 +63,15 @@ qemu-system-x86_64 \
     -drive id=SystemDisk,if=none,file="/macOS.img" \
     -device ide-hd,bus=sata.4,drive=SystemDisk \
     -monitor telnet::45454,server,nowait \
-    -nographic -vnc 0.0.0.0:0 -k $KEYBOARD
+    -daemonize -vnc 0.0.0.0:0 -k $KEYBOARD
 
 while ! nc -z 127.0.0.1 45454 ; do sleep 1 ; done
 
+echo sending ret
 while nc -z 127.0.0.1 45454 && !  sshpass -p 'macos' ssh -q -o "StrictHostKeyChecking no" -o "PreferredAuthentications=publickey" -o ConnectTimeout=1 macos@127.0.0.1 -p 22 exit; do
     (echo "sendkey ret") | nc 127.0.0.1 45454 &> /dev/null;
-    sleep 1.5;
+    sleep 3;
 done
 
+echo done and ready
 nc 127.0.0.1 45454
