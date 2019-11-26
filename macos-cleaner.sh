@@ -8,4 +8,6 @@ find /System/Library/Templates/Data/System/Library/Speech -name PCMWave -exec rm
 rm -rf /System/Library/Screen\ Savers/*.saver
 rm -rf /private/var/db/dyld
 
-xcrun simctl erase all
+#disable spotlight
+launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
+rm /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
